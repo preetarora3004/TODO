@@ -2,7 +2,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { Request, Response, NextFunction } from "express";
 import { UserService } from "@workspace/app/backend/modules/user/user.service.js";
-import { ApiError } from "@workspace/app/backend/modules/user/utils/type.api.error.js";
+import { ApiError } from "@workspace/app/backend/types/type.api.error.js";
 import { isValidUserCreationInput, isValidUserSessionInput } from "@workspace/app/backend/modules/user/user.validator.js";
 
 const service = new UserService();
@@ -11,6 +11,7 @@ export class UserController {
     async signUp(req: Request, res: Response, next: NextFunction) {
         try {
             const parsed = isValidUserCreationInput.safeParse(req.body);
+            const SALT_ROUND = 10;
 
             if (!parsed.success) {
                 throw new ApiError(400, "Invalid Schema")
@@ -23,7 +24,7 @@ export class UserController {
                 throw new ApiError(409, "User already exists");
             }
 
-            const password = await bcrypt.hash(parsed.data.password, 10);
+            const password = await bcrypt.hash(parsed.data.password, SALT_ROUND);
             const user = await service.create({
                 ...parsed.data,
                 username,

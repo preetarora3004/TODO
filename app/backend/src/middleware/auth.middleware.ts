@@ -1,8 +1,8 @@
 import jwt, { JwtPayload } from 'jsonwebtoken'
 import { Request, Response, NextFunction } from 'express';
-import { ApiError } from '@workspace/app/backend/modules/user/utils/type.api.error.js';
+import { ApiError } from '@workspace/app/backend/types/type.api.error.js';
 
-async function authMiddleware(
+export async function authMiddleware(
     req: Request,
     res: Response,
     next: NextFunction
