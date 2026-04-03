@@ -1,0 +1,30 @@
+import jwt, { JwtPayload } from 'jsonwebtoken'
+import { Request, Response, NextFunction } from 'express';
+import { ApiError } from '@workspace/app/backend/modules/user/utils/type.api.error.js';
+
+async function authMiddleware(
+    req: Request,
+    res: Response,
+    next: NextFunction
+) {
+    try {
+        const token = req.headers.authorization?.split(" ")[1];
+
+        if (!token || !process.env.JWT_SECRET) {
+            throw new ApiError(401, "Invalid secret")
+        }
+
+        const payload = jwt.verify(token, process.env.JWT_SECRET) as JwtPayload;
+        
+        if(!payload) {
+            throw new ApiError(401, "Unauthorized access")
+        }
+        req.user = payload;
+
+        next();
+    }
+    catch(err) {
+        next(err);
+    }
+
+}
