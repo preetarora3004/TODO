@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { ApiError } from '@workspace/app/backend/types/type.api.error.js';
 import { TaskService } from '@workspace/app/backend/modules/task/task.service.js';
-import { taskCreationValidator } from '@workspace/app/backend/modules/task/task.validator.js';
+import { taskCreationValidator, isValidTaskDetails } from '@workspace/app/backend/modules/task/task.validator.js';
 
 const service = new TaskService();
 
@@ -118,13 +118,17 @@ export class TaskController {
     async editTaskByTaskId(req: Request, res: Response, next: NextFunction) {
         try {
             const taskId = req.params.taskId as string;
-            const payload = req.body;
+            const parsed = isValidTaskDetails.safeParse(req.body);
 
-            if(!payload || Object.keys(payload).length === 0 || !taskId) {
+            if (!parsed.success || !taskId) {
                 throw new ApiError(400, "Invalid schema")
-            } 
+            }
 
-            const updatedTask = await service.editTaskByTaskId(taskId, payload);
+            const filteredData = Object.fromEntries(
+                Object.entries(parsed.data).filter(([_, value]) => value !== undefined)
+            );
+
+            const updatedTask = await service.editTaskByTaskId(taskId, filteredData);
 
             if (!updatedTask) {
                 throw new ApiError(400, "Task not exists")

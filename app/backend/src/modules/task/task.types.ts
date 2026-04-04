@@ -1,7 +1,6 @@
 export interface TaskSchema {
     title?: string,
     description?: string,
-    status?: "PENDING" | "COMPLETED" | "DUE",
     completeBy?: Date
 }
 

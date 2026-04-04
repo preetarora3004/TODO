@@ -26,17 +26,13 @@ export class TaskRepository {
         completeBy?: Date
     }) {
 
-        const filteredData = Object.fromEntries(
-            Object.entries(data).filter(([_, value]) => value !== undefined || value !== null)
-        ); 
-
         return await Task.findByIdAndUpdate(
             {
                 _id: taskId,
                 status: { $ne: "COMPLETED" }
             },
             {
-                $set: filteredData
+                $set: data
             },
             {
                 new: true,
