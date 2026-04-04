@@ -50,10 +50,15 @@ export class TaskController {
                 throw new ApiError(400, "No task created")
             }
 
+            const taskInfo = task.map((item) => ({
+                ...item,
+                status: new Date(item.completeBy).getTime() > Date.now() ? "PENDING" : "DUE"
+            }))
+
             return res.status(200).json({
                 success: true,
                 data: {
-                    task
+                    taskInfo
                 }
             })
         }

@@ -13,11 +13,13 @@ export class TaskRepository {
     async getTaskByUserId(userId: string) {
         return await Task.find({
             userId
-        })
+        }).lean();
     }
 
     async deleteTask(taskId: string) {
-        return await Task.findByIdAndDelete(taskId)
+        return await Task.findByIdAndDelete({
+            _id: taskId,
+        })
     }
 
     async editTask(taskId: string, data: {
@@ -26,7 +28,7 @@ export class TaskRepository {
         completeBy?: Date
     }) {
 
-        return await Task.findByIdAndUpdate(
+        return await Task.findOneAndUpdate(
             {
                 _id: taskId,
                 status: { $ne: "COMPLETED" }
@@ -42,8 +44,11 @@ export class TaskRepository {
     }
 
     async markTaskComplete(taskId: string) {
-        return await Task.findByIdAndUpdate(
-            taskId,
+        return await Task.findOneAndUpdate(
+            {
+                _id: taskId,
+                status: { $ne: "COMPLETED" }
+            },
             {
                 $set: { status: "COMPLETED" }
             },
