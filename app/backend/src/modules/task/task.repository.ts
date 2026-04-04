@@ -28,7 +28,7 @@ export class TaskRepository {
 
         const filteredData = Object.fromEntries(
             Object.entries(data).filter(([_, value]) => value !== undefined || value !== null)
-        );
+        ); 
 
         return await Task.findByIdAndUpdate(
             {

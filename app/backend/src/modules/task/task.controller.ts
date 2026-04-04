@@ -120,13 +120,13 @@ export class TaskController {
             const taskId = req.params.taskId as string;
             const payload = req.body;
 
-            if(!taskId || !payload) {
+            if(!payload || Object.keys(payload).length === 0 || !taskId) {
                 throw new ApiError(400, "Invalid schema")
-            }
+            } 
 
             const updatedTask = await service.editTaskByTaskId(taskId, payload);
 
-            if(!updatedTask) {
+            if (!updatedTask) {
                 throw new ApiError(400, "Task not exists")
             }
 
@@ -136,7 +136,7 @@ export class TaskController {
                     updatedTask
                 }
             })
-                
+
         }
         catch (err) {
             next(err);
