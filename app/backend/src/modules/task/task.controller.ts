@@ -72,7 +72,7 @@ export class TaskController {
 
             const taskDeleted = await service.deleteTaskByTaskId(taskId);
 
-            if(!taskDeleted) {
+            if (!taskDeleted) {
                 throw new ApiError(400, "Task not found")
             }
 
@@ -81,7 +81,7 @@ export class TaskController {
                 data: {
                     title: taskDeleted.title
                 }
-            })            
+            })
         }
         catch (err) {
             next(err);
@@ -92,25 +92,53 @@ export class TaskController {
         try {
             const taskId = req.params.taskId as string;
 
-            if(!taskId) {
+            if (!taskId) {
                 throw new ApiError(400, "Invalid id")
             }
 
             const markComplete = await service.markTaskCompleted(taskId);
 
-            if(!markComplete || markComplete.status !== "COMPLETED") {
+            if (!markComplete || markComplete.status !== "COMPLETED") {
                 throw new ApiError(400, "Task not found")
             }
 
             return res.status(200).json({
                 success: true,
                 data: {
-                    markComplete 
+                    markComplete
                 }
             })
 
         }
-        catch(err) {
+        catch (err) {
+            next(err);
+        }
+    }
+
+    async editTaskByTaskId(req: Request, res: Response, next: NextFunction) {
+        try {
+            const taskId = req.params.taskId as string;
+            const payload = req.body;
+
+            if(!taskId || !payload) {
+                throw new ApiError(400, "Invalid schema")
+            }
+
+            const updatedTask = await service.editTaskByTaskId(taskId, payload);
+
+            if(!updatedTask) {
+                throw new ApiError(400, "Task not exists")
+            }
+
+            return res.status(200).json({
+                success: true,
+                data: {
+                    updatedTask
+                }
+            })
+                
+        }
+        catch (err) {
             next(err);
         }
     }

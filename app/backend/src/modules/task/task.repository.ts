@@ -12,29 +12,31 @@ export class TaskRepository {
 
     async getTaskByUserId(userId: string) {
         return await Task.find({
-            userId: userId
+            userId
         })
     }
 
     async deleteTask(taskId: string) {
-        return await Task.findByIdAndDelete({
-            _id: taskId
-        })
+        return await Task.findByIdAndDelete(taskId)
     }
 
     async editTask(taskId: string, data: {
-        title: string | null,
-        description: string | null,
-        completeBy: Date | null
+        title?: string,
+        description?: string,
+        completeBy?: Date
     }) {
+
+        const filteredData = Object.fromEntries(
+            Object.entries(data).filter(([_, value]) => value !== undefined || value !== null)
+        );
+
         return await Task.findByIdAndUpdate(
             {
-                _id: taskId
+                _id: taskId,
+                status: { $ne: "COMPLETED" }
             },
             {
-                $set: {
-                    ...data
-                }
+                $set: filteredData
             },
             {
                 new: true,
@@ -45,11 +47,9 @@ export class TaskRepository {
 
     async markTaskComplete(taskId: string) {
         return await Task.findByIdAndUpdate(
+            taskId,
             {
-                _id: taskId
-            },
-            {
-                $set: {status: "COMPLETED"}
+                $set: { status: "COMPLETED" }
             },
             {
                 new: true,

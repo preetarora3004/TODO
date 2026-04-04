@@ -7,7 +7,8 @@ const controller = new TaskController();
 
 router.post("/create-task", authMiddleware, controller.createTask);
 router.get("/get-task", authMiddleware, controller.getTaskByUserId);
-router.delete("/delete-task/:taskId", authMiddleware, controller.deleteTaskByTaskId);
+router.patch("/edit-task/:taskId", authMiddleware, controller.editTaskByTaskId);
 router.patch("/mark-complete/:taskId", authMiddleware, controller.markTaskCompleted);
+router.delete("/delete-task/:taskId", authMiddleware, controller.deleteTaskByTaskId);
 
 export default router;

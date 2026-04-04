@@ -1,8 +1,8 @@
 export interface TaskSchema {
-    title: string,
+    title?: string,
     description?: string,
-    status: "PENDING" | "COMPLETED" | "DUE",
-    completeBy: Date
+    status?: "PENDING" | "COMPLETED" | "DUE",
+    completeBy?: Date
 }
 
 export interface taskCreationDTO {

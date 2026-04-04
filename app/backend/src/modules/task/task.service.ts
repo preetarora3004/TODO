@@ -1,4 +1,4 @@
-import { taskCreationDTO } from "@workspace/app/backend/modules/task/task.types.js";
+import { taskCreationDTO, TaskSchema } from "@workspace/app/backend/modules/task/task.types.js";
 import { TaskRepository } from "@workspace/app/backend/modules/task/task.repository.js";
 
 export class TaskService {
@@ -18,5 +18,9 @@ export class TaskService {
 
     async markTaskCompleted(taskId: string) {
         return this.repo.markTaskComplete(taskId);
+    }
+
+    async editTaskByTaskId(taskId: string, data: TaskSchema) {
+        return this.repo.editTask(taskId, data);
     }
 }
