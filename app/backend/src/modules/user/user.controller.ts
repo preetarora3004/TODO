@@ -1,8 +1,8 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { Request, Response, NextFunction } from "express";
-import { UserService } from "@workspace/app/backend/modules/user/user.service.js";
 import { ApiError } from "@workspace/app/backend/types/type.api.error.js";
+import { UserService } from "@workspace/app/backend/modules/user/user.service.js";
 import { isValidUserCreationInput, isValidUserSessionInput } from "@workspace/app/backend/modules/user/user.validator.js";
 
 const service = new UserService();

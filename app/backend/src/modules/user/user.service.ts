@@ -1,5 +1,5 @@
-import { UserRepository } from "@workspace/app/backend/modules/user/user.repository.js";
 import { userCreation } from "@workspace/app/backend/modules/user/user.types.js";
+import { UserRepository } from "@workspace/app/backend/modules/user/user.repository.js";
 
 export class UserService {
     private repo = new UserRepository();

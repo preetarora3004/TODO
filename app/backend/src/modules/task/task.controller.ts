@@ -1,9 +1,11 @@
 import { Request, Response, NextFunction } from 'express';
 import { ApiError } from '@workspace/app/backend/types/type.api.error.js';
+import { TaskUtils } from '@workspace/app/backend/modules/task/task.utils.js';
 import { TaskService } from '@workspace/app/backend/modules/task/task.service.js';
 import { taskCreationValidator, isValidTaskDetails } from '@workspace/app/backend/modules/task/task.validator.js';
 
 const service = new TaskService();
+const utils = new TaskUtils();
 
 export class TaskController {
     async createTask(req: Request, res: Response, next: NextFunction) {
@@ -50,10 +52,7 @@ export class TaskController {
                 throw new ApiError(400, "No task created")
             }
 
-            const taskInfo = task.map((item) => ({
-                ...item,
-                status: new Date(item.completeBy).getTime() > Date.now() ? "PENDING" : "DUE"
-            }))
+            const taskInfo = utils.markStatus(task);
 
             return res.status(200).json({
                 success: true,
@@ -134,7 +133,8 @@ export class TaskController {
                 throw new ApiError(400, "Task not exists")
             }
 
-            const grouped = service.groupByCategory(task);
+            const taskInfo = utils.markStatus(task);
+            const grouped = utils.groupByCategory(taskInfo);
 
             return res.status(200).json({
                 success: true,
@@ -158,9 +158,7 @@ export class TaskController {
                 throw new ApiError(400, "Invalid schema")
             }
 
-            const filteredData = Object.fromEntries(
-                Object.entries(parsed.data).filter(([_, value]) => value !== undefined)
-            );
+            const filteredData = utils.filteredTask(req.body);
 
             const updatedTask = await service.editTaskByTaskId(taskId, filteredData);
 
