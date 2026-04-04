@@ -29,7 +29,8 @@ const taskSchema = new Schema({
         ref: "User",
         required: true,
         index: true
-    }
+    },
+    category: {type: String, required: true, trim: false}
 
 },
     { timestamps: true }

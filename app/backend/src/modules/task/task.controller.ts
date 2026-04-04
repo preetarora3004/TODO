@@ -120,6 +120,35 @@ export class TaskController {
         }
     }
 
+    async groupByCategory(req: Request, res: Response, next: NextFunction) {
+        try {
+            const userId = req.user?.id;
+
+            if (!userId) {
+                throw new ApiError(400, "Invalid schema")
+            }
+
+            const task = await service.getTaskByUserId(userId);
+
+            if (!task || task.length === 0) {
+                throw new ApiError(400, "Task not exists")
+            }
+
+            const grouped = service.groupByCategory(task);
+
+            return res.status(200).json({
+                success: true,
+                data: {
+                    grouped
+                }
+            })
+        }
+        catch (err) {
+            next(err);
+        }
+
+    }
+
     async editTaskByTaskId(req: Request, res: Response, next: NextFunction) {
         try {
             const taskId = req.params.taskId as string;

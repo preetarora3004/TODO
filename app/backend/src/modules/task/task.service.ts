@@ -23,4 +23,18 @@ export class TaskService {
     async editTaskByTaskId(taskId: string, data: TaskSchema) {
         return this.repo.editTask(taskId, data);
     }
+
+    groupByCategory(task: Array<Record<any, any>>) {
+
+        const grouped = task.reduce((acc, item) => {
+            if (!acc[item.category]) {
+                acc[item.category] = [];
+            }
+            acc[item.category].push(item);
+
+            return acc;
+        }, {} as Record<string, typeof task[0][]>);
+
+        return grouped;
+    }
 }

@@ -47,7 +47,7 @@ export class TaskRepository {
         return await Task.findOneAndUpdate(
             {
                 _id: taskId,
-                status: { $ne: "COMPLETED" }
+                status: { $eq: "PENDING" }
             },
             {
                 $set: { status: "COMPLETED" }
