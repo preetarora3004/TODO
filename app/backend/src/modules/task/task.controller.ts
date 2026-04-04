@@ -22,6 +22,7 @@ export class TaskController {
             return res.status(201).json({
                 success: true,
                 data: {
+                    id: task._id,
                     title: task.title,
                     description: task.description,
                     status: task.status,
@@ -45,7 +46,7 @@ export class TaskController {
 
             const task = await service.getTaskByUserId(userId);
 
-            if (!task || task.length < 0) {
+            if (!task || task.length <= 0) {
                 throw new ApiError(400, "No task created")
             }
 
@@ -57,6 +58,59 @@ export class TaskController {
             })
         }
         catch (err) {
+            next(err);
+        }
+    }
+
+    async deleteTaskByTaskId(req: Request, res: Response, next: NextFunction) {
+        try {
+            const taskId = req.params.taskId as string;
+
+            if (!taskId) {
+                throw new ApiError(400, "Invalid schema")
+            }
+
+            const taskDeleted = await service.deleteTaskByTaskId(taskId);
+
+            if(!taskDeleted) {
+                throw new ApiError(400, "Task not found")
+            }
+
+            return res.status(200).json({
+                success: true,
+                data: {
+                    title: taskDeleted.title
+                }
+            })            
+        }
+        catch (err) {
+            next(err);
+        }
+    }
+
+    async markTaskCompleted(req: Request, res: Response, next: NextFunction) {
+        try {
+            const taskId = req.params.taskId as string;
+
+            if(!taskId) {
+                throw new ApiError(400, "Invalid id")
+            }
+
+            const markComplete = await service.markTaskCompleted(taskId);
+
+            if(!markComplete || markComplete.status !== "COMPLETED") {
+                throw new ApiError(400, "Task not found")
+            }
+
+            return res.status(200).json({
+                success: true,
+                data: {
+                    markComplete 
+                }
+            })
+
+        }
+        catch(err) {
             next(err);
         }
     }

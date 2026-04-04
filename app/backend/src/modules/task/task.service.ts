@@ -11,4 +11,12 @@ export class TaskService {
     async getTaskByUserId(userId: string) {
         return this.repo.getTaskByUserId(userId);
     }
+
+    async deleteTaskByTaskId(taskId: string) {
+        return this.repo.deleteTask(taskId);
+    }
+
+    async markTaskCompleted(taskId: string) {
+        return this.repo.markTaskComplete(taskId);
+    }
 }

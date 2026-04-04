@@ -1,4 +1,4 @@
-import mongoose, { Mongoose, Schema } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 const Status = ["PENDING", "COMPLETED", "DUE"]
 
@@ -22,11 +22,11 @@ const taskSchema = new Schema({
                 return value.getTime() >= Date.now() + 60 * 60 * 1000;
             }
         },
-        userId: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "User",
-            required: true
-        }
+    },
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        required: true
     }
 
 },
