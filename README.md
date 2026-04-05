@@ -19,7 +19,10 @@
 
 ### Libraries Used
 
-- [Bcrypt] 
+- Bcrypt 
+- Jsonwebtoken
+- Zod
+- Dotenv
 
 ## Getting Started
 
@@ -127,6 +130,7 @@ You can use any of these credentials to sign in at route [http://localhost:3000/
     }
     ```
 6. Click <b>Send</b>. You will get a response with status code `201` and 
+
     ```javascript
     {
         "success": true,
@@ -139,20 +143,26 @@ You can use any of these credentials to sign in at route [http://localhost:3000/
 #### Creating your first task
 
 1. Open <b>PostMan</b> and click on the `Create Request` and choose `HTTP`.
-2. Choose `POST` and fill out the <b>URL</b> with `http://localhost:3000/task/create-task`.
-3. Copy the <b>token</b> generated from <b>SignUp</b> request.
-4. Open <b>Headers</b> tab and create a key `Authorization` add it's value as `Bearer token-generated`.
-5. In <b>Body</b>, fill out the body with
-```javascript
-{
-    "title": "First Task",
-    "description": "Task's description", //optional
-    "category": "work",
-    "completeBy": "UTC-Date" // 2026-04-06T19:40:00.000Z
-}
-```
 
-6. Click <b>Send</b>. You will get a response with status code `200` and 
+2. Choose `POST` and fill out the <b>URL</b> with `http://localhost:3000/task/create-task`.
+
+3. Copy the <b>token</b> generated from <b>SignUp</b> request.
+
+4. Open <b>Headers</b> tab and create a key `Authorization` add it's value as `Bearer token-generated`.
+
+5. In <b>Body</b>, fill out the body with
+
+    ```javascript
+    {
+        "title": "First Task",
+        "description": "Task's description", //optional
+        "category": "work",
+        "completeBy": "UTC-Date" // 2026-04-06T19:40:00.000Z
+    }
+    ```
+
+6. Click <b>Send</b>. You will get a response with status code `201` and 
+
     ```javascript
     {
         "success": true,
@@ -160,8 +170,8 @@ You can use any of these credentials to sign in at route [http://localhost:3000/
             "task" : {
                 "id" : "task._id",
                 "title" : "task.title",
-                "description" : "title.description",
-                "category" : "title.category",
+                "description" : "task.description",
+                "category" : "task.category",
                 "status" : "PENDING", // min time to set is +1 hour from creation time
                 "compeleteBy" : "UTC-Date"
             }
@@ -172,19 +182,26 @@ You can use any of these credentials to sign in at route [http://localhost:3000/
 #### Fetching all task
 
 1. Open <b>PostMan</b> and click on the `Create Request` and choose `HTTP`.
+
 2. Choose `GET` and fill out the <b>URL</b> with `http://localhost:3000/task/get-task`.
+
 3. Copy the <b>token</b> generated from <b>SignUp</b> request.
+
 4. Open <b>Headers</b> tab and create a key `Authorization` add it's value as `Bearer token-generated`.
+
 5. In <b>Body</b>, fill out the body with
-```javascript
-{
-    "title": "First Task",
-    "description": "Task's description", //optional
-    "category": "work",
-    "completeBy": "UTC-Date" // 2026-04-06T19:40:00.000Z
-}
-```
+
+    ```javascript
+    {   
+        "title": "First Task",
+        "description": "Task's description", //optional
+        "category": "work",
+        "completeBy": "UTC-Date" // 2026-04-06T19:40:00.000Z
+    }
+    ```
+
 6. Click <b>Send</b>. You will get a response with status code `200` and 
+
     ```javascript
     {
         "success": true,
@@ -192,8 +209,8 @@ You can use any of these credentials to sign in at route [http://localhost:3000/
             "task" : {
                 "id" : "task._id",
                 "title" : "task.title",
-                "description" : "title.description",
-                "category" : "title.category",
+                "description" : "task.description",
+                "category" : "task.category",
                 "status" : "PENDING", // min time to set is +1 hour from creation time
                 "compeleteBy" : "UTC-Date"
             }[]
@@ -204,19 +221,26 @@ You can use any of these credentials to sign in at route [http://localhost:3000/
 #### Fetching task grouped by category 
 
 1. Open <b>PostMan</b> and click on the `Create Request` and choose `HTTP`.
+
 2. Choose `GET` and fill out the <b>URL</b> with `http://localhost:3000/task/get-task`.
+
 3. Copy the <b>token</b> generated from <b>SignUp</b> request.
+
 4. Open <b>Headers</b> tab and create a key `Authorization` add it's value as `Bearer token-generated`.
+
 5. In <b>Body</b>, fill out the body with
-```javascript
-{
-    "title": "First Task",
-    "description": "Task's description", //optional
-    "category": "work",
-    "completeBy": "UTC-Date" // 2026-04-06T19:40:00.000Z
-}
-```
+
+    ```javascript
+    {
+        "title": "First Task",
+        "description": "Task's description", //optional
+        "category": "work",
+        "completeBy": "UTC-Date" // 2026-04-06T19:40:00.000Z
+    }
+    ```
+
 6. Click <b>Send</b>. You will get a response with status code `200` and 
+
     ```javascript
     {
         "success": true,
@@ -224,9 +248,107 @@ You can use any of these credentials to sign in at route [http://localhost:3000/
             "task" : {
                 "id" : "task._id",
                 "title" : "task.title",
-                "description" : "title.description",
-                "category" : "title.category",
+                "description" : "task.description",
+                "category" : "task.category",
                 "status" : "PENDING", // min time to set is +1 hour from creation time
+                "compeleteBy" : "UTC-Date"
+            }[]
+        }
+    }
+    ```
+
+#### Edit an existing task
+
+1. Open <b>PostMan</b> and click on the `Create Request` and choose `HTTP`.
+
+2. Choose `PATCH` and fill out the <b>URL</b> with `http://localhost:3000/task/edit-task/:taskId`.
+
+3. Copy the <b>token</b> generated from <b>SignUp</b> request.
+
+4. Copy the <b>Task Id</b> from the tasks that you want to edit, from the response of `http://localhost:3000/task/get-task`.
+
+5. Paste it at the end of your <b>Edit task URL</b>.
+
+6. Open <b>Headers</b> tab and create a key `Authorization` add its value as `Bearer token-generated`.
+
+7. In <b>Body</b>, fill out the body with the detail you need to edit, either single key or all
+
+    ```javascript
+    {   
+        "title": "Editied title",
+        "description": "Edited description", //optional
+        "category": "Edited category",
+        "completeBy": "Edited UTC-Date" // 2026-04-06T19:40:00.000Z
+    }
+    ```
+
+8. Click <b>Send</b>. You will get a response with status code `200` and the updated task
+
+    ```javascript
+    {
+        "success": true,
+        "data": {
+            "task" : {
+                "id" : "task._id",
+                "title" : "task.title",
+                "description" : "task.description",
+                "category" : "task.category",
+                "status" : "PENDING", // min time to set is +1 hour from creation time
+                "compeleteBy" : "UTC-Date"
+            }[]
+        }
+    }
+    ```
+#### Delete a task
+
+1. Open <b>PostMan</b> and click on the `Create Request` and choose `HTTP`.
+
+2. Choose `PATCH` and fill out the <b>URL</b> with `http://localhost:3000/task/delete-task/:taskId`.
+
+3. Copy the <b>token</b> generated from <b>SignUp</b> request.
+
+4. Copy the <b>Task Id</b> from the tasks that you want to delete, from the response of `http://localhost:3000/task/get-task`.
+
+5. Paste it at the end of your <b>Delete task URL</b>.
+
+6. Open <b>Headers</b> tab and create a key `Authorization` add its value as `Bearer token-generated`.
+
+7. Click <b>Send</b>. You will get a response with status code `200` and
+
+    ```javascript
+    {
+        "success": true,
+        "data": {
+            "title": "deletedTask.title"
+        }
+    }
+    ```
+#### Mark task as complete
+
+1. Open <b>PostMan</b> and click on the `Create Request` and choose `HTTP`.
+
+2. Choose `PATCH` and fill out the <b>URL</b> with `http://localhost:3000/task/mark-complete/:taskId`.
+
+3. Copy the <b>token</b> generated from <b>SignUp</b> request.
+
+4. Copy the <b>Task Id</b> from the tasks that you want to mark complete, from the response of `http://localhost:3000/task/get-task`.
+
+5. Paste it at the end of your <b>Mark complete task URL</b>.
+
+6. Open <b>Headers</b> tab and create a key `Authorization` add its value as `Bearer token-generated`.
+
+7. Click <b>Send</b>. You will get a response with status code `200` and the updated task
+
+    ```javascript
+    {
+        "success": true,
+        "data": {
+            "task" : {
+                "id" : "task._id",
+                "title" : "task.title",
+                "description" : "task.description",
+                "category" : "task.category",
+                "status" : "COMPLETED",
                 "compeleteBy" : "UTC-Date"
             }[]
         }
