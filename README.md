@@ -15,14 +15,14 @@
 - [Express.js]()
 - [MongoDB]()
 - [Node.js]()
-- [Mongoose]()
 
 ### Libraries Used
 
 - Bcrypt 
-- Jsonwebtoken
-- Zod
 - Dotenv
+- Jsonwebtoken
+- Mongoose
+- Zod
 
 ## Getting Started
 
@@ -32,8 +32,8 @@ To get a local copy up and running, please follow these simple steps.
 
 Here is what you need to be able to run To-Do Application Backend.
 
-- Node.js (Version: >=25.x)
-- MongoDB (Version: >=8.x)
+- Node.js (Version: >=24.x)
+- MongoDB (Version: >=7.x)
 - Yarn _(recommended)_
 
 ## Development
@@ -124,7 +124,8 @@ You can use any of these credentials to sign in at route [http://localhost:3000/
 5. Fill out the body with 
 
     ```javascript
-    {   "username": "your-username",
+    {
+        "username": "your-username",
         "password": "your-password",
         "name": "your-name"
     }
@@ -355,18 +356,77 @@ You can use any of these credentials to sign in at route [http://localhost:3000/
     }
     ```
 
-### Structure
+## Structure
 
 ```
-└── app                     # Root application folder (main entry point of the project)
-    ├── backend             # Backend service (API layer, business logic)
-    │   └── src             # Source code of the backend
-    │       ├── middleware  # Express middleware (auth, validation, error handling)
-    │       ├── modules     # Feature-based modules (domain-driven structure)
-    │       │   ├── task    # Task module (task APIs, services, models)
-    │       │   └── user    # User module (authentication, user management)
-    │       └── types       # TypeScript types/interfaces (shared typings)
-    └── db                  # Database layer (schemas, connection, config)
+├── app                                      # Root application folder
+│   ├── backend                              # Backend service (Node.js + TypeScript)
+│   │   └── src                              # Main source code
+│   │       ├── app.ts                       # Express app setup (middlewares, routes mounting)
+│   │       ├── middleware                   # Custom middlewares
+│   │       │   ├── auth.middleware.ts       # Handles authentication (JWT/session validation)
+│   │       │   └── error.middleware.ts      # Global error handler (centralized error responses)
+│   │       ├── modules                      # Feature-based modular architecture
+│   │       │   ├── task                     # Task module (business logic related to tasks)
+│   │       │   │   ├── task.controller.ts   # Handles HTTP requests/responses for tasks
+│   │       │   │   ├── task.repository.ts   # DB layer (queries related to tasks)
+│   │       │   │   ├── task.routes.ts       # API routes for task endpoints
+│   │       │   │   ├── task.service.ts      # Business logic layer (core logic)
+│   │       │   │   ├── task.types.ts        # TypeScript types/interfaces for task
+│   │       │   │   ├── task.utils.ts        # Helper/utility functions for tasks
+│   │       │   │   └── task.validator.ts    # Request validation (Zod)
+│   │       │   └── user                     # User module (authentication/user management)
+│   │       │       ├── user.controller.ts   # Handles user-related API requests
+│   │       │       ├── user.repository.ts   # DB queries for user data
+│   │       │       ├── user.routes.ts       # API routes for users (login/signup)
+│   │       │       ├── user.service.ts      # Business logic for user operations
+│   │       │       ├── user.types.ts        # Type definitions for user
+│   │       │       └── user.validator.ts    # Input validation for user APIs (Zod)
+│   │       ├── server.ts                    # Entry point (starts server, connects DB, listens on port)
+│   │       └── types                        # Global TypeScript type extensions
+│   │           ├── express.d.ts             # Extends Express types (e.g., req.user)
+│   │           └── type.api.error.ts        # Custom API error type definitions
+│   └── db                                   # Database layer
+│       ├── connection.ts                    # DB connection setup (MongoDB/Mongoose config)
+│       └── db.ts                            # Exports DB models/schemas (central access point)
+├── package.json                             # Project metadata + dependencies + scripts
+├── tsconfig.json                            # TypeScript configuration
+└── yarn.lock                                # Dependency lock file (exact versions for reproducibility)
 
 ```
 
+## Key Decisions
+
+```md
+
+### Task Status Handling Stratergy
+
+Instead of relying on cron jobs or background workers to update task statuses, this system uses <b>dynamic time-based evaluation</b>.
+
+Task states are derived at runtime by comparing the current time with the task’s deadline:
+
+- `COMPLETED` → explicitly updated by the user and persisted in the database
+- `PENDING / DUE` → computed dynamically based on time comparison
+
+Since time is continuously changing, persisting `PENDING` and `DUE` states would require frequent database updates (e.g., every minute), which is inefficient and unnecessary.
+
+By computing these states on demand:
+
+- Database writes are minimized
+- System load is reduced (no cron jobs or polling)
+- Status values remain always accurate in real-time
+
+This approach ensures a <b>scalable, efficient, and consistent</b> way to handle time-driven state.
+
+### Error Handling Strategy
+
+This project uses a centralized error handling approach.
+
+Rather than returning error responses in every controller, errors are thrown and passed to a global error middleware using `next(error)`. The middleware is responsible for handling all errors and sending standardized responses.
+
+Benefits:
+- Eliminates repetitive try-catch response handling
+- Ensures consistent error structure
+- Improves code readability and maintainability
+
+```
