@@ -141,13 +141,14 @@ You can use any of these credentials to sign in at route [http://localhost:3000/
 ### Structure
 
 ```
-app/
-├── backend/
-|       |--src/
-|           |-- middleware/
-|           |-- modules/
-|           |-- types/ 
-|
-|__db/
+└── app
+    ├── backend
+    │   └── src
+    │       ├── middleware
+    │       ├── modules
+    │       │   ├── task
+    │       │   └── user
+    │       └── types
+    └── db
 
 ```
