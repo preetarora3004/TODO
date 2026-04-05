@@ -113,8 +113,6 @@ You can use any of these credentials to sign in at route [http://localhost:3000/
 
 #### Setting up your first user
 
-##### Approach 1
-
 1. Download and Open [PostMan](https://www.postman.com/) or any other API client to send request via HTTP:
 
 2. Click on the `Create Request` and choose `HTTP`.
@@ -138,17 +136,115 @@ You can use any of these credentials to sign in at route [http://localhost:3000/
     }
     ```
 
+#### Creating your first task
+
+1. Open <b>PostMan</b> and click on the `Create Request` and choose `HTTP`.
+2. Choose `POST` and fill out the <b>URL</b> with `http://localhost:3000/task/create-task`.
+3. Copy the <b>token</b> generated from <b>SignUp</b> request.
+4. Open <b>Headers</b> tab and create a key `Authorization` add it's value as `Bearer token-generated`.
+5. In <b>Body</b>, fill out the body with
+```javascript
+{
+    "title": "First Task",
+    "description": "Task's description", //optional
+    "category": "work",
+    "completeBy": "UTC-Date" // 2026-04-06T19:40:00.000Z
+}
+```
+
+6. Click <b>Send</b>. You will get a response with status code `200` and 
+    ```javascript
+    {
+        "success": true,
+        "data": {
+            "task" : {
+                "id" : "task._id",
+                "title" : "task.title",
+                "description" : "title.description",
+                "category" : "title.category",
+                "status" : "PENDING", // min time to set is +1 hour from creation time
+                "compeleteBy" : "UTC-Date"
+            }
+        }
+    }
+    ```
+
+#### Fetching all task
+
+1. Open <b>PostMan</b> and click on the `Create Request` and choose `HTTP`.
+2. Choose `GET` and fill out the <b>URL</b> with `http://localhost:3000/task/get-task`.
+3. Copy the <b>token</b> generated from <b>SignUp</b> request.
+4. Open <b>Headers</b> tab and create a key `Authorization` add it's value as `Bearer token-generated`.
+5. In <b>Body</b>, fill out the body with
+```javascript
+{
+    "title": "First Task",
+    "description": "Task's description", //optional
+    "category": "work",
+    "completeBy": "UTC-Date" // 2026-04-06T19:40:00.000Z
+}
+```
+6. Click <b>Send</b>. You will get a response with status code `200` and 
+    ```javascript
+    {
+        "success": true,
+        "data": {
+            "task" : {
+                "id" : "task._id",
+                "title" : "task.title",
+                "description" : "title.description",
+                "category" : "title.category",
+                "status" : "PENDING", // min time to set is +1 hour from creation time
+                "compeleteBy" : "UTC-Date"
+            }[]
+        }
+    }
+    ```
+
+#### Fetching task grouped by category 
+
+1. Open <b>PostMan</b> and click on the `Create Request` and choose `HTTP`.
+2. Choose `GET` and fill out the <b>URL</b> with `http://localhost:3000/task/get-task`.
+3. Copy the <b>token</b> generated from <b>SignUp</b> request.
+4. Open <b>Headers</b> tab and create a key `Authorization` add it's value as `Bearer token-generated`.
+5. In <b>Body</b>, fill out the body with
+```javascript
+{
+    "title": "First Task",
+    "description": "Task's description", //optional
+    "category": "work",
+    "completeBy": "UTC-Date" // 2026-04-06T19:40:00.000Z
+}
+```
+6. Click <b>Send</b>. You will get a response with status code `200` and 
+    ```javascript
+    {
+        "success": true,
+        "data": {
+            "task" : {
+                "id" : "task._id",
+                "title" : "task.title",
+                "description" : "title.description",
+                "category" : "title.category",
+                "status" : "PENDING", // min time to set is +1 hour from creation time
+                "compeleteBy" : "UTC-Date"
+            }[]
+        }
+    }
+    ```
+
 ### Structure
 
 ```
-└── app
-    ├── backend
-    │   └── src
-    │       ├── middleware
-    │       ├── modules
-    │       │   ├── task
-    │       │   └── user
-    │       └── types
-    └── db
+└── app                     # Root application folder (main entry point of the project)
+    ├── backend             # Backend service (API layer, business logic)
+    │   └── src             # Source code of the backend
+    │       ├── middleware  # Express middleware (auth, validation, error handling)
+    │       ├── modules     # Feature-based modules (domain-driven structure)
+    │       │   ├── task    # Task module (task APIs, services, models)
+    │       │   └── user    # User module (authentication, user management)
+    │       └── types       # TypeScript types/interfaces (shared typings)
+    └── db                  # Database layer (schemas, connection, config)
 
 ```
+

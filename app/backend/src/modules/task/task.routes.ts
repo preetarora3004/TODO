@@ -10,5 +10,6 @@ router.get("/get-task", authMiddleware, controller.getTaskByUserId);
 router.patch("/edit-task/:taskId", authMiddleware, controller.editTaskByTaskId);
 router.patch("/mark-complete/:taskId", authMiddleware, controller.markTaskCompleted);
 router.delete("/delete-task/:taskId", authMiddleware, controller.deleteTaskByTaskId);
+router.get("/get-task/category", authMiddleware, controller.groupByCategory);
 
 export default router;

@@ -1,7 +1,8 @@
 export interface TaskSchema {
     title?: string,
     description?: string,
-    completeBy?: Date
+    completeBy?: Date,
+    category?: string
 }
 
 export interface taskCreationDTO {

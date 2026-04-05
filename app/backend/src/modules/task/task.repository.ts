@@ -26,7 +26,8 @@ export class TaskRepository {
     async editTask(taskId: string, data: {
         title?: string,
         description?: string,
-        completeBy?: Date
+        completeBy?: Date,
+        category?: string
     }) {
 
         return await Task.findOneAndUpdate(
