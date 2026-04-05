@@ -82,9 +82,9 @@ Here is what you need to be able to run To-Do Application Backend.
 
 | Email | Password |
 |-------|----------|
-| `free@example.com` | `free` |
+| `testuser@gmail.com` | `12345678` |
 
-You can use any of these credentials to sign in at route [http://localhost:3000/user/signin](http://localhost:3000/user/signin)
+You can use any of these credentials to sign in at route [http://localhost:3000/api/v1/user/signin](http://localhost:3000/api/v1/user/signin)
 
 #### Development tip
 
@@ -119,7 +119,7 @@ You can use any of these credentials to sign in at route [http://localhost:3000/
 1. Download and Open [PostMan](https://www.postman.com/) or any other API client to send request via HTTP:
 
 2. Click on the `Create Request` and choose `HTTP`.
-3. Choose `POST` and fill out the <b>URL</b> with `http://localhost:3000/user/signup`.
+3. Choose `POST` and fill out the <b>URL</b> with `http://localhost:3000/api/v1/user/signup`.
 4. Click on <b>Body</b> and choose <b>raw</b>.
 5. Fill out the body with 
 
@@ -145,7 +145,7 @@ You can use any of these credentials to sign in at route [http://localhost:3000/
 
 1. Open <b>PostMan</b> and click on the `Create Request` and choose `HTTP`.
 
-2. Choose `POST` and fill out the <b>URL</b> with `http://localhost:3000/task/create-task`.
+2. Choose `POST` and fill out the <b>URL</b> with `http://localhost:3000/api/v1/task/create-task`.
 
 3. Copy the <b>token</b> generated from <b>SignUp</b> request.
 
@@ -184,37 +184,26 @@ You can use any of these credentials to sign in at route [http://localhost:3000/
 
 1. Open <b>PostMan</b> and click on the `Create Request` and choose `HTTP`.
 
-2. Choose `GET` and fill out the <b>URL</b> with `http://localhost:3000/task/get-task`.
+2. Choose `GET` and fill out the <b>URL</b> with `http://localhost:3000/api/v1/task/get-task`.
 
 3. Copy the <b>token</b> generated from <b>SignUp</b> request.
 
 4. Open <b>Headers</b> tab and create a key `Authorization` add it's value as `Bearer token-generated`.
 
-5. In <b>Body</b>, fill out the body with
-
-    ```javascript
-    {   
-        "title": "First Task",
-        "description": "Task's description", //optional
-        "category": "work",
-        "completeBy": "UTC-Date" // 2026-04-06T19:40:00.000Z
-    }
-    ```
-
-6. Click <b>Send</b>. You will get a response with status code `200` and 
+5. Click <b>Send</b>. You will get a response with status code `200` and 
 
     ```javascript
     {
         "success": true,
         "data": {
-            "task" : {
+            "task" : [{
                 "id" : "task._id",
                 "title" : "task.title",
                 "description" : "task.description",
                 "category" : "task.category",
-                "status" : "PENDING", // min time to set is +1 hour from creation time
+                "status" : "task.status",
                 "compeleteBy" : "UTC-Date"
-            }[]
+            }]
         }
     }
     ```
@@ -223,37 +212,28 @@ You can use any of these credentials to sign in at route [http://localhost:3000/
 
 1. Open <b>PostMan</b> and click on the `Create Request` and choose `HTTP`.
 
-2. Choose `GET` and fill out the <b>URL</b> with `http://localhost:3000/task/get-task`.
+2. Choose `GET` and fill out the <b>URL</b> with `http://localhost:3000/api/v1/task/get-task`.
 
 3. Copy the <b>token</b> generated from <b>SignUp</b> request.
 
 4. Open <b>Headers</b> tab and create a key `Authorization` add it's value as `Bearer token-generated`.
 
-5. In <b>Body</b>, fill out the body with
-
-    ```javascript
-    {
-        "title": "First Task",
-        "description": "Task's description", //optional
-        "category": "work",
-        "completeBy": "UTC-Date" // 2026-04-06T19:40:00.000Z
-    }
-    ```
-
-6. Click <b>Send</b>. You will get a response with status code `200` and 
+5. Click <b>Send</b>. You will get a response with status code `200` and 
 
     ```javascript
     {
         "success": true,
         "data": {
             "task" : {
-                "id" : "task._id",
-                "title" : "task.title",
-                "description" : "task.description",
-                "category" : "task.category",
-                "status" : "PENDING", // min time to set is +1 hour from creation time
-                "compeleteBy" : "UTC-Date"
-            }[]
+                "category" : [{
+                    "id" : "task._id",
+                    "title" : "task.title",
+                    "description" : "task.description",
+                    "category" : "task.category",
+                    "status" : "PENDING",
+                    "completeBy" : "UTC-Date"
+                }]
+            }
         }
     }
     ```
@@ -262,11 +242,11 @@ You can use any of these credentials to sign in at route [http://localhost:3000/
 
 1. Open <b>PostMan</b> and click on the `Create Request` and choose `HTTP`.
 
-2. Choose `PATCH` and fill out the <b>URL</b> with `http://localhost:3000/task/edit-task/:taskId`.
+2. Choose `PATCH` and fill out the <b>URL</b> with `http://localhost:3000/api/v1/task/edit-task/:taskId`.
 
 3. Copy the <b>token</b> generated from <b>SignUp</b> request.
 
-4. Copy the <b>Task Id</b> from the tasks that you want to edit, from the response of `http://localhost:3000/task/get-task`.
+4. Copy the <b>Task Id</b> from the tasks that you want to edit, from the response of `http://localhost:3000/api/v1/task/get-task`.
 
 5. Paste it at the end of your <b>Edit task URL</b>.
 
@@ -277,9 +257,9 @@ You can use any of these credentials to sign in at route [http://localhost:3000/
     ```javascript
     {   
         "title": "Editied title",
-        "description": "Edited description", //optional
+        "description": "Edited description", 
         "category": "Edited category",
-        "completeBy": "Edited UTC-Date" // 2026-04-06T19:40:00.000Z
+        "completeBy": "Edited UTC-Date"
     }
     ```
 
@@ -289,14 +269,14 @@ You can use any of these credentials to sign in at route [http://localhost:3000/
     {
         "success": true,
         "data": {
-            "task" : {
+            "task" : [{
                 "id" : "task._id",
                 "title" : "task.title",
                 "description" : "task.description",
                 "category" : "task.category",
-                "status" : "PENDING", // min time to set is +1 hour from creation time
+                "status" : "task.status", 
                 "compeleteBy" : "UTC-Date"
-            }[]
+            }]
         }
     }
     ```
@@ -304,11 +284,11 @@ You can use any of these credentials to sign in at route [http://localhost:3000/
 
 1. Open <b>PostMan</b> and click on the `Create Request` and choose `HTTP`.
 
-2. Choose `PATCH` and fill out the <b>URL</b> with `http://localhost:3000/task/delete-task/:taskId`.
+2. Choose `PATCH` and fill out the <b>URL</b> with `http://localhost:3000/api/v1/task/delete-task/:taskId`.
 
 3. Copy the <b>token</b> generated from <b>SignUp</b> request.
 
-4. Copy the <b>Task Id</b> from the tasks that you want to delete, from the response of `http://localhost:3000/task/get-task`.
+4. Copy the <b>Task Id</b> from the tasks that you want to delete, from the response of `http://localhost:3000/api/v1/task/get-task`.
 
 5. Paste it at the end of your <b>Delete task URL</b>.
 
@@ -328,11 +308,11 @@ You can use any of these credentials to sign in at route [http://localhost:3000/
 
 1. Open <b>PostMan</b> and click on the `Create Request` and choose `HTTP`.
 
-2. Choose `PATCH` and fill out the <b>URL</b> with `http://localhost:3000/task/mark-complete/:taskId`.
+2. Choose `PATCH` and fill out the <b>URL</b> with `http://localhost:3000/api/v1/task/mark-complete/:taskId`.
 
 3. Copy the <b>token</b> generated from <b>SignUp</b> request.
 
-4. Copy the <b>Task Id</b> from the tasks that you want to mark complete, from the response of `http://localhost:3000/task/get-task`.
+4. Copy the <b>Task Id</b> from the tasks that you want to mark complete, from the response of `http://localhost:3000/api/v1/task/get-task`.
 
 5. Paste it at the end of your <b>Mark complete task URL</b>.
 
@@ -351,7 +331,7 @@ You can use any of these credentials to sign in at route [http://localhost:3000/
                 "category" : "task.category",
                 "status" : "COMPLETED",
                 "compeleteBy" : "UTC-Date"
-            }[]
+            }
         }
     }
     ```
@@ -397,11 +377,9 @@ You can use any of these credentials to sign in at route [http://localhost:3000/
 
 ## Key Decisions
 
-```md
+### Task Status Handling Strategy
 
-### Task Status Handling Stratergy
-
-Instead of relying on cron jobs or background workers to update task statuses, this system uses <b>dynamic time-based evaluation</b>.
+Instead of relying on cron jobs or background workers to update task statuses, this system uses **dynamic time-based evaluation**.
 
 Task states are derived at runtime by comparing the current time with the task’s deadline:
 
@@ -416,7 +394,7 @@ By computing these states on demand:
 - System load is reduced (no cron jobs or polling)
 - Status values remain always accurate in real-time
 
-This approach ensures a <b>scalable, efficient, and consistent</b> way to handle time-driven state.
+This approach ensures a **scalable, efficient, and consistent** way to handle time-driven state.
 
 ### Error Handling Strategy
 
@@ -428,5 +406,3 @@ Benefits:
 - Eliminates repetitive try-catch response handling
 - Ensures consistent error structure
 - Improves code readability and maintainability
-
-```
