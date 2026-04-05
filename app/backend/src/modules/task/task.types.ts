@@ -7,6 +7,7 @@ export interface TaskSchema {
 export interface taskCreationDTO {
     title: string,
     description: string | null,
+    category: string,
     userId: string,
     completeBy: Date
 }

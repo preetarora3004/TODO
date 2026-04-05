@@ -4,6 +4,7 @@ export class TaskRepository {
     async createTask(data: {
         title: string,
         description: string | null,
+        category: string,
         userId: string,
         completeBy: Date
     }) {

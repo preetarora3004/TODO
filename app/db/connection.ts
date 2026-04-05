@@ -6,9 +6,7 @@ export const connectDb = async () => {
         if(!process.env.DATABASE_URL) {
             throw new Error("Invalid URL")
         }
-
-        console.log("Connecting to database")
-
+        
         mongoose.connect(process.env.DATABASE_URL);
     }
     catch(err) {

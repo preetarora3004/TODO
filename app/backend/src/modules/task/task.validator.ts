@@ -3,6 +3,7 @@ import z from 'zod';
 export const taskCreationValidator = z.object({
     title: z.string(),
     completeBy: z.coerce.date(),
+    category: z.string().min(1),
     description: z.string().nullable()
 })
 
